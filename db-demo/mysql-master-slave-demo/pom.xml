@@ -7,5 +7,6 @@
   <packaging>pom</packaging>
   <modules>
     <module>mysql-two-datasource-demo</module>
+    <module>mysql-replication-readonly-demo</module>
   </modules>
 </project>

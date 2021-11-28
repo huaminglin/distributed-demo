@@ -2,7 +2,7 @@
 
 cd $(dirname $0)
 
-sudo docker exec -i docker_mysql-slave_1 mysql --password="root" <<EOF
+sudo docker exec -i docker_mysql-master_1 mysql --password="root" <<EOF
 
 CREATE USER 'repl'@'%' IDENTIFIED BY 'password';
 

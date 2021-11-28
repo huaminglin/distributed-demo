@@ -32,7 +32,7 @@ public class MasterDatasourceConfig {
 
   @Primary
   @Bean("masterSqlSessionFactory")
-  public SqlSessionFactory masterSqlSessionFactory(DataSource masterDataSource) throws Exception {
+  public SqlSessionFactory masterSqlSessionFactory(@Qualifier("masterDataSource") DataSource masterDataSource) throws Exception {
     SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
     bean.setDataSource(masterDataSource);
 //    String locationPattern = "classpath*:huaminglin.demo.distributed.db.repository.master/*.xml";

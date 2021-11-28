@@ -1,15 +1,15 @@
 # Setup MySQL master and slave
 
-## Step 1: update.sh
+## Step 1: update.sh and db-init.sh
 
-## ker, mysql and heredoc
+## Docker, mysql and heredoc
 
 sudo docker exec -i docker_mysql-master_1 mysql --password="root" <<EOF
 show databases;
 EOF
 
 
-## Prepare a user for replication
+## Step 2: Prepare a user for replication
 
 user-repl.sh
 
@@ -39,26 +39,7 @@ show master status;
 1 row in set (0.00 sec)
 ```
 
-## sudo docker exec -it docker_mysql-slave_1 mysql --password="root"
-
-```
-CHANGE MASTER TO
-
-    MASTER_HOST='docker_mysql-master_1',
-
-    MASTER_USER='repl',
-
-    MASTER_PASSWORD='password',
-
-    MASTER_LOG_FILE='replicas-mysql-bin.000003',
-
-    MASTER_LOG_POS=689;
-
-stop slave;
-start slave;
-show slave status\G;
-```
-
+## register-slave.sh
 
 ## Slave fails to connect master
 
@@ -70,3 +51,7 @@ Last_IO_Error: error connecting to master 'root@mysql-master:3306' - retry-time:
 Last_IO_Error: error connecting to master 'repl@docker_mysql-master_1:3306' - retry-time: 60 retries: 1 message: Authentication plugin 'caching_sha2_password' reported error: Authentication requires secure connection.
 ```
 "--get-server-public-key" can resolve the above error.
+
+## sudo docker exec -it docker_mysql-master_1 bash
+
+mysqlbinlog

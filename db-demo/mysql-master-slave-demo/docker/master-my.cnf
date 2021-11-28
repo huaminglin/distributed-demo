@@ -1,0 +1,10 @@
+[mysqld]
+server_id=100
+binlog-ignore-db=mysql
+log-bin=replicas-mysql-bin
+binlog_cache_size=1M
+binlog_format=mixed
+binlog_expire_logs_seconds=360000
+slave_skip_errors=1062
+
+user=mysql

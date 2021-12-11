@@ -29,7 +29,7 @@
           <execution>
             <configuration>
               <outputDirectory>${project.basedir}/src/main/generated-sources/avro</outputDirectory>
-              <sourceDirectory>${project.basedir}/src/main/avro</sourceDirectory>
+              <sourceDirectory>${project.basedir}/src/main/resources/avro</sourceDirectory>
             </configuration>
             <goals>
               <goal>schema</goal>

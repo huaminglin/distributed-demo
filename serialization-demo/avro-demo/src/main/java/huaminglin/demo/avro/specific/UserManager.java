@@ -1,7 +1,6 @@
 package huaminglin.demo.avro.specific;
 
 import example.avro.User;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -10,16 +9,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public final class UserManager {
-
-  public static byte[] getBytesFromInputStream(InputStream is) throws IOException {
-    ByteArrayOutputStream os = new ByteArrayOutputStream();
-    byte[] buffer = new byte[0xFFFF];
-    for (int len = is.read(buffer); len != -1; len = is.read(buffer)) {
-      os.write(buffer, 0, len);
-    }
-    return os.toByteArray();
-  }
-
   public static void writeUserBytes() throws IOException {
     User user = User.newBuilder()
         .setName("Charlie")
@@ -32,11 +21,10 @@ public final class UserManager {
   }
 
   public static void parseUserFromBytes() throws IOException {
-    InputStream stream = UserManager.class.getClassLoader()
-        .getResourceAsStream("user-data.avro");
-    byte[] bytes = getBytesFromInputStream(stream);
+    InputStream is = UserManager.class.getClassLoader().getResourceAsStream("data/user-data.avro");
+    byte[] bytes = is.readAllBytes();
     User user = UserManager.parseUserFromBytes(bytes);
-    System.out.println(user.getName());
+    System.out.println(user);
   }
 
   public static byte[] getUserBytes(User user) throws IOException {

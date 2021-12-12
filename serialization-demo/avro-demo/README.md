@@ -63,3 +63,17 @@ org.apache.avro.message.BinaryMessageEncoder.V1MessageEncoder.getWriteHeader
     }
   }
 ```
+
+## Support to convert UserV2 to User or User to UserV2
+
+A client/server can convert UserV2 to User or User to UserV2 when it can assess the two versions of Schema.
+
+An ideal scenario is upgrade all the consumers first.
+After all the consumers upgrade, the system is ready to accept the new version of data.
+Then we can upgrade the producers to generate the new version of data.
+In this scenario, we don't need a Schema server.
+We can just package the latest 2/3 version of schema at the consumer side, and the latest schema for the producer side.
+
+But a deployable unit can work as producer for one model and consumer for other model.
+An upgrade can involve multiple models.
+Then an old consumer need to parse a new version of data. Then we need a Schema server to for the client to fetch the new Schema.

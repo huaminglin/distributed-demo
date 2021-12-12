@@ -1,0 +1,21 @@
+{
+	"namespace" : "example.avro",
+	"type" : "record",
+	"name" : "UserV2",
+	"fields" : [
+	    {
+			"name" : "name",
+			"type" : "string"
+		}, {
+			"name" : "favoriteNumber",
+			"type" : ["int", "null"]
+		}, {
+			"name" : "favoriteColor",
+			"type" : ["string", "null"]
+		}, {
+     	"name" : "favoriteMovie",
+     	"type" : ["string", "null"],
+     	"default": "007"
+    }
+	]
+}

@@ -15,29 +15,21 @@ public final class UserManager {
         .setFavoriteColor("blue")
         .setFavoriteNumber(null)
         .build();
-    byte[] userBytes = UserManager.getUserBytes(user);
-    Path path = Paths.get("/tmp/user-data.avro");
-    Files.write(path, userBytes);
-  }
 
-  public static void parseUserFromBytes() throws IOException {
-    InputStream is = UserManager.class.getClassLoader().getResourceAsStream("data/user-data.avro");
-    byte[] bytes = is.readAllBytes();
-    User user = UserManager.parseUserFromBytes(bytes);
-    System.out.println(user);
-  }
-
-  public static byte[] getUserBytes(User user) throws IOException {
     ByteBuffer bb = user.toByteBuffer();
     byte[] bytes = new byte[bb.remaining()];
     bb.get(bytes);
-    return bytes;
+
+    Path path = Paths.get("/tmp/user-data-bytebuffer.avro");
+    Files.write(path, bytes);
   }
 
-  public static User parseUserFromBytes(byte[] bytes) throws IOException {
+  public static void parseUserFromBytes() throws IOException {
+    InputStream is = UserManager.class.getClassLoader().getResourceAsStream("data/user-data-bytebuffer.avro");
+    byte[] bytes = is.readAllBytes();
     ByteBuffer buffer = ByteBuffer.wrap(bytes);
     User user = User.fromByteBuffer(buffer);
-    return user;
+    System.out.println(user);
   }
 
   public static void main(String[] args) throws IOException {

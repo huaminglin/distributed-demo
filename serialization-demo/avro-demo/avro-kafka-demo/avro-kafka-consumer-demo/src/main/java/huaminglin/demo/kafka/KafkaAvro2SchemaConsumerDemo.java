@@ -7,6 +7,7 @@ import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
@@ -42,6 +43,8 @@ public final class KafkaAvro2SchemaConsumerDemo {
     }
     SchemaRegistryClient schemaRegistry = new CachedSchemaRegistryClient("http://127.0.0.1:8085", 1024);
     KafkaAvroDeserializer deserializer = new KafkaAvroDeserializer(schemaRegistry, (Map) props);
+    // As we can see, our conversion executes without any error, but not all elements in the HashMap are strings.
+    // So, even if this method looks the easiest, we must keep in mind some safety-related checks in the future.
 
     KafkaConsumer<Long, byte[]> consumer = new KafkaConsumer<>(props);
     String topicName = "my-topic";
@@ -53,14 +56,18 @@ public final class KafkaAvro2SchemaConsumerDemo {
     System.out.println("Got records: " + records.count());
     for (ConsumerRecord<Long, byte[]> record : records) {
       System.out.printf("offset = %d, key = %s \n", record.offset(), record.key());
-      Object value = deserializer.deserialize(topicName, record.value(), newSchema);
+      byte[] bytes = record.value();
+      System.out.println("First 5 Bytes: " + Arrays.toString(Arrays.copyOf(bytes, 5)));
+      Object value = deserializer.deserialize(topicName, bytes, newSchema);
       System.out.println(value);
     }
     /*
-    offset = 0, key = 56
-    {"name": "Charlie", "favoriteNumber": null, "favoriteColor": "blue", "sex": "male", "favoriteMovie": "007"}
-    offset = 1, key = 87
-    {"name": "Charlie", "favoriteNumber": null, "favoriteColor": "blue", "sex": "male", "favoriteMovie": null}
+offset = 0, key = 56
+First 5 Bytes: [0, 0, 0, 0, 1]
+{"name": "Charlie", "favoriteNumber": null, "favoriteColor": "blue", "sex": "male", "favoriteMovie": "007"}
+offset = 1, key = 87
+First 5 Bytes: [0, 0, 0, 0, 2]
+{"name": "Charlie", "favoriteNumber": null, "favoriteColor": "blue", "sex": "male", "favoriteMovie": null}
      */
     // Old data to the new schema get default value for new field.
 

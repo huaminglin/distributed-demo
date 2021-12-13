@@ -77,3 +77,49 @@ We can just package the latest 2/3 version of schema at the consumer side, and t
 But a deployable unit can work as producer for one model and consumer for other model.
 An upgrade can involve multiple models.
 Then an old consumer need to parse a new version of data. Then we need a Schema server to for the client to fetch the new Schema.
+
+## Type full name: a name and a namespace
+
+```
+	Suppressed: org.apache.avro.UnresolvedUnionException: Not in union ["null",{"type":"enum","name":"Sex","namespace":"example.avro.v2","symbols":["male","female","unknown"]}]: male
+		at org.apache.avro.generic.GenericData.resolveUnion(GenericData.java:896)
+		at org.apache.avro.generic.GenericDatumWriter.resolveUnion(GenericDatumWriter.java:272)
+		at org.apache.avro.generic.GenericDatumWriter.writeWithoutConversion(GenericDatumWriter.java:143)
+		at org.apache.avro.generic.GenericDatumWriter.write(GenericDatumWriter.java:83)
+		at org.apache.avro.generic.GenericDatumWriter.writeField(GenericDatumWriter.java:221)
+		... 6 more
+```
+
+Each has a fullname that is composed of two parts; a name and a namespace.
+Equality of names is defined on the fullname.
+
+## How to make an enum nullable?
+
+```
+	Suppressed: org.apache.avro.UnresolvedUnionException: Not in union ["null",{"type":"enum","name":"Sex","namespace":"example.avro","symbols":["male","female"]}]: male
+		at org.apache.avro.generic.GenericData.resolveUnion(GenericData.java:896)
+		at org.apache.avro.generic.GenericDatumWriter.resolveUnion(GenericDatumWriter.java:272)
+		at org.apache.avro.generic.GenericDatumWriter.writeWithoutConversion(GenericDatumWriter.java:143)
+		at org.apache.avro.generic.GenericDatumWriter.write(GenericDatumWriter.java:83)
+		at org.apache.avro.generic.GenericDatumWriter.writeField(GenericDatumWriter.java:221)
+```
+
+## Add a new value to the enum Type
+
+```
+{"name": "Charlie", "favoriteNumber": null, "favoriteColor": "blue", "sex": "third", "favoriteMovie": null}
+Exception in thread "main" org.apache.avro.AvroTypeException: No match for third
+	at org.apache.avro.io.ResolvingDecoder.readEnum(ResolvingDecoder.java:269)
+	at org.apache.avro.generic.GenericDatumReader.readEnum(GenericDatumReader.java:268)
+	at org.apache.avro.generic.GenericDatumReader.readWithoutConversion(GenericDatumReader.java:182)
+	at org.apache.avro.generic.GenericDatumReader.read(GenericDatumReader.java:161)
+	at org.apache.avro.generic.GenericDatumReader.readField(GenericDatumReader.java:260)
+	at org.apache.avro.generic.GenericDatumReader.readRecord(GenericDatumReader.java:248)
+	at org.apache.avro.generic.GenericDatumReader.readWithoutConversion(GenericDatumReader.java:180)
+	at org.apache.avro.generic.GenericDatumReader.read(GenericDatumReader.java:161)
+	at org.apache.avro.generic.GenericDatumReader.read(GenericDatumReader.java:154)
+	at huaminglin.demo.avro.specific.AvroDowngradeDemo.readToOldSchema(AvroDowngradeDemo.java:66)
+	at huaminglin.demo.avro.specific.AvroDowngradeDemo.main(AvroDowngradeDemo.java:74)
+```
+
+The FORWARD compatibility breaks.

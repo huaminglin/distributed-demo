@@ -17,8 +17,7 @@
          "type": {
             "type": "enum",
             "name": "Sex",
-            "symbols": ["male", "female", "third"],
-            "default": "third"
+            "symbols": ["male", "female", "third"]
         }
     }, {
      	"name" : "favoriteMovie",

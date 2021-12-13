@@ -17,8 +17,7 @@
       "type": {
          "type": "enum",
          "name": "Sex",
-         "symbols": ["male", "female"],
-         "default": "male"
+         "symbols": ["male", "female"]
      }
     }
 	]

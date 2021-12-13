@@ -8,9 +8,10 @@
   <packaging>pom</packaging>
   <version>1.0-SNAPSHOT</version>
   <modules>
+    <module>avro-serialization-demo</module>
     <module>avro-upgrade-demo</module>
+    <module>avro-downgrade-demo</module>
     <module>avro-kafka-demo</module>
-    <module>avro-kafka-producer-demo</module>
   </modules>
   <properties>
     <maven.compiler.source>11</maven.compiler.source>

@@ -11,7 +11,7 @@ import org.apache.avro.io.BinaryDecoder;
 import org.apache.avro.io.DatumReader;
 import org.apache.avro.io.DecoderFactory;
 
-public final class ParseOldDataDemo {
+public final class AvroTwoSchemaDemo {
 
   public static void pareOldDataWithBuiltInSchema() throws IOException {
     InputStream is = FileUserManager.class.getClassLoader()

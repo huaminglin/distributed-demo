@@ -9,7 +9,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>avro-upgrade-demo</artifactId>
+  <artifactId>avro-downgrade-demo</artifactId>
   <dependencies>
     <dependency>
       <groupId>org.apache.avro</groupId>

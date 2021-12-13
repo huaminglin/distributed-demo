@@ -1,13 +1,18 @@
 package huaminglin.demo.kafka;
 
-import example.avro.User;
-import example.avro.UserV2;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import io.confluent.kafka.serializers.KafkaAvroSerializerConfig;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import org.apache.avro.Schema;
+import org.apache.avro.Schema.Parser;
+import org.apache.avro.generic.GenericData;
+import org.apache.avro.generic.GenericData.Record;
+import org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -18,33 +23,23 @@ import org.apache.kafka.common.serialization.LongSerializer;
 public final class KafkaAvroProducerDemo {
 
   public static void publishV1(Map<String, Object> props)
-      throws ExecutionException, InterruptedException {
-    Producer<Long, User> producer = new KafkaProducer<>(props);
+      throws ExecutionException, InterruptedException, IOException {
+
+    Schema oldSchema;
+    {
+      InputStream inputStream = KafkaAvroProducerDemo.class.getClassLoader()
+          .getResourceAsStream("avro/user.avsc");
+      oldSchema = new Parser().parse(inputStream);
+    }
+    GenericRecord genericRecord = new Record(oldSchema);
+    genericRecord.put("name", "Charlie");
+    genericRecord.put("favoriteColor", "blue");
+    GenericData.EnumSymbol symbol = new GenericData.EnumSymbol(oldSchema, "male");
+    genericRecord.put("sex", symbol);
+
+    Producer<Long, GenericRecord> producer = new KafkaProducer<>(props);
     String topic = "my-topic";
-    User user = User.newBuilder()
-        .setName("Charlie")
-        .setFavoriteColor("blue")
-        .setFavoriteNumber(null)
-        .build();
-    ProducerRecord<Long, User> record = new ProducerRecord<>(topic, Math.round(Math.random() * 100), user);
-    MyCallback callback = new MyCallback();
-    Future future = producer.send(record, callback);
-    RecordMetadata result = (RecordMetadata) future.get();
-    long offset = result.offset();
-    System.out.println(result.partition());
-    System.out.println(offset);
-    producer.close();
-  }
-  public static void publishV2(Map<String, Object> props)
-      throws ExecutionException, InterruptedException {
-    Producer<Long, UserV2> producer = new KafkaProducer<>(props);
-    String topic = "my-topic";
-    UserV2 user = UserV2.newBuilder()
-        .setName("Charlie")
-        .setFavoriteColor("blue")
-        .setFavoriteNumber(null)
-        .build();
-    ProducerRecord<Long, UserV2> record = new ProducerRecord<>(topic, Math.round(Math.random() * 100), user);
+    ProducerRecord<Long, GenericRecord> record = new ProducerRecord<>(topic, Math.round(Math.random() * 100), genericRecord);
     MyCallback callback = new MyCallback();
     Future future = producer.send(record, callback);
     RecordMetadata result = (RecordMetadata) future.get();
@@ -54,7 +49,33 @@ public final class KafkaAvroProducerDemo {
     producer.close();
   }
 
-  public static void publish() throws ExecutionException, InterruptedException {
+  public static void publishV2(Map<String, Object> props)
+      throws ExecutionException, InterruptedException, IOException {
+    Schema newSchema;
+    {
+      InputStream inputStream = KafkaAvroProducerDemo.class.getClassLoader()
+          .getResourceAsStream("avro/v2/userV2.avsc");
+      newSchema = new Parser().parse(inputStream);
+    }
+    GenericRecord genericRecord = new Record(newSchema);
+    genericRecord.put("name", "Charlie");
+    genericRecord.put("favoriteColor", "blue");
+    GenericData.EnumSymbol symbol = new GenericData.EnumSymbol(newSchema, "male");
+    genericRecord.put("sex", symbol);
+
+    Producer<Long, GenericRecord> producer = new KafkaProducer<>(props);
+    String topic = "my-topic";
+    ProducerRecord<Long, GenericRecord> record = new ProducerRecord<>(topic, Math.round(Math.random() * 100), genericRecord);
+    MyCallback callback = new MyCallback();
+    Future future = producer.send(record, callback);
+    RecordMetadata result = (RecordMetadata) future.get();
+    long offset = result.offset();
+    System.out.println(result.partition());
+    System.out.println(offset);
+    producer.close();
+  }
+
+  public static void publish() throws ExecutionException, InterruptedException, IOException {
     Map<String, Object> props = new HashMap<>();
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
     props.put(ProducerConfig.RETRIES_CONFIG, 1);
@@ -70,7 +91,8 @@ public final class KafkaAvroProducerDemo {
     publishV2(props);
   }
 
-  public static void main(String[] args) throws ExecutionException, InterruptedException {
+  public static void main(String[] args)
+      throws ExecutionException, InterruptedException, IOException {
     publish();
   }
 

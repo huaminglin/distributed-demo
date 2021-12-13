@@ -13,6 +13,14 @@
 			"name" : "favoriteColor",
 			"type" : ["string", "null"]
 		}, {
+         "name": "sex",
+         "type": {
+            "type": "enum",
+            "name": "Sex",
+            "symbols": ["male", "female", "third"],
+            "default": "third"
+        }
+    }, {
      	"name" : "favoriteMovie",
      	"type" : ["string", "null"],
      	"default": "007"

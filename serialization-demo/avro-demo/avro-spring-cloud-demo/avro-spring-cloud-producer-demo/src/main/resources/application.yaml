@@ -1,0 +1,13 @@
+spring:
+  cloud:
+    stream:
+      schema:
+        avro:
+          dynamicSchemaGenerationEnabled: true
+      default:
+        producer:
+          useNativeEncoding: false
+      bindings:
+        output:
+          destination: user-details
+          content-type: application/*+avro

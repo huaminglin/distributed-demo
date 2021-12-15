@@ -1,0 +1,12 @@
+spring:
+  cloud:
+    stream:
+      default:
+        consumer:
+          useNativeEncoding: false
+      bindings:
+        input:
+          destination: user-details
+          content-type: application/*+avro
+          group: group-1
+          concurrency: 3

@@ -12,6 +12,7 @@
     <module>avro-upgrade-demo</module>
     <module>avro-downgrade-demo</module>
     <module>avro-kafka-demo</module>
+    <module>avro-spring-cloud-demo</module>
   </modules>
   <properties>
     <maven.compiler.source>11</maven.compiler.source>

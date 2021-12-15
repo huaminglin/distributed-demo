@@ -1,0 +1,3 @@
+#+org.springframework.messaging.converter.MessageConverter
++org.springframework.messaging.converter.MessageConverter#<<org.springframework.messaging.converter.MessageConverter
+#+org.springframework.integration.channel.AbstractMessageChannel

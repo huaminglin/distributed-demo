@@ -1,0 +1,25 @@
+{
+	"namespace" : "example.avro",
+	"type" : "record",
+	"name" : "User",
+	"fields" : [
+	    {
+			"name" : "name",
+			"type" : "string"
+		}, {
+			"name" : "favoriteNumber",
+			"type" : ["int", "null"]
+		}, {
+			"name" : "favoriteColor",
+			"type" : ["string", "null"]
+		}, {
+      "name": "sex",
+      "type": {
+         "type": "enum",
+         "name": "Sex",
+         "symbols": ["male", "female"],
+         "default": "male"
+     }
+    }
+	]
+}

@@ -8,7 +8,7 @@ CHANGE MASTER TO
     MASTER_USER='repl',
     MASTER_PASSWORD='password',
     MASTER_LOG_FILE='replicas-mysql-bin.000003',
-    MASTER_LOG_POS=1390;
+    MASTER_LOG_POS=1388;
 stop slave;
 start slave;
 show slave status\G;

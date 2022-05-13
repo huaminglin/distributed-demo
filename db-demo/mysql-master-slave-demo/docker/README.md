@@ -54,4 +54,17 @@ Last_IO_Error: error connecting to master 'repl@docker_mysql-master_1:3306' - re
 
 ## sudo docker exec -it docker_mysql-master_1 bash
 
-mysqlbinlog
+## mysqlbinlog
+
+Download MySQL binary form https://dev.mysql.com/downloads/mysql/.
+
+Mount it to Docker container
+
+
+sudo docker exec -it docker_mysql-master_1 find / -iname "*-bin.*"
+/var/lib/mysql/replicas-mysql-bin.000002
+/var/lib/mysql/replicas-mysql-bin.000003
+/var/lib/mysql/replicas-mysql-bin.000001
+/var/lib/mysql/replicas-mysql-bin.index
+
+sudo docker exec -it docker_mysql-master_1 /mybin/bin/mysqlbinlog /var/lib/mysql/replicas-mysql-bin.000003

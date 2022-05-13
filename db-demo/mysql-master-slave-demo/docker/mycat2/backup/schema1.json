@@ -1,0 +1,26 @@
+{
+  "customTables":{},
+  "globalTables":{},
+  "normalTables":{},
+  "schemaName":"drivecenter",
+  "shadingTables":{
+    "file_info":{
+      "createTableSQL":"CREATE TABLE drivecenter.file_info ...",
+      "function":{
+        "clazz":"io.mycat.router.mycat1xfunction.PartitionByFileMap",
+        "properties":{
+          "mapFile":"center_city_test.txt",
+          "defaultNode":0,
+          "type":"Integer",
+          "columnName":"city_code"
+        },
+        "ranges":{}
+      },
+      "partition":{
+        "schemaNames":"drivecenter",
+        "tableNames":"file_info_$0-2",
+        "targetNames":"prototype"
+      }
+    }
+  }
+}

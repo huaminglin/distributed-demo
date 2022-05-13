@@ -1,0 +1,18 @@
+{
+  "dbType":"mysql",
+  "idleTimeout":60000,
+  "initSqls":[],
+  "initSqlsGetConnection":true,
+  "instanceType":"READ_WRITE",
+  "maxCon":1000,
+  "maxConnectTimeout":3000,
+  "maxRetryCount":5,
+  "minCon":1,
+  "name":"m1",
+  "password":"client",
+  "queryTimeout":30,
+  "type":"JDBC",
+  "url":"jdbc:mysql://127.0.0.1:33065/db1?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true",
+  "user":"client",
+  "weight":0
+}

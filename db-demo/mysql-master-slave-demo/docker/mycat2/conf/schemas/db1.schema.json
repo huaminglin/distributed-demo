@@ -1,0 +1,32 @@
+{
+	"schemaName": "db1",
+	"customTables": {},
+	"globalTables": {},
+	"normalTables": {
+		"nt": {
+			"locality": {
+				"schemaName": "db1",
+				"tableName": "nt",
+				"targetName": "c1"
+			}
+		}
+	},
+	"shadingTables": {
+		"st": {
+			"createTableSQL": "CREATE TABLE st(id bigint NOT NULL AUTO_INCREMENT,sourceUrl varchar(1024));",
+			"function": {
+				"clazz": "io.mycat.router.mycat1xfunction.PartitionByMod",
+				"properties": {
+					"columnName": "id",
+					"count": "50"
+				},
+				"ranges": {}
+			},
+			"partition": {
+				"targetNames": "c1",
+				"schemaNames": "db1",
+				"tableNames": "st_$0-49"
+			}
+		}
+	}
+}

@@ -1,0 +1,27 @@
+{
+	"customTables":{},
+	"globalTables":{},
+	"normalProcedures":{},
+	"normalTables":{
+		"goods":{
+			"createTableSQL":"CREATE TABLE db1.goods (\n\t`code` varchar(80) DEFAULT NULL,\n\t`name` varchar(80) DEFAULT NULL\n) ENGINE = InnoDB CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci",
+			"locality":{
+				"schemaName":"db1",
+				"tableName":"goods",
+				"targetName":"prototype"
+			}
+		},
+		"t1":{
+			"createTableSQL":"CREATE TABLE db1.t1 (\n\tid int\n)",
+			"locality":{
+				"schemaName":"db1",
+				"tableName":"t1",
+				"targetName":"prototype"
+			}
+		}
+	},
+	"schemaName":"db1",
+	"shardingTables":{},
+	"targetName":"prototype",
+	"views":{}
+}

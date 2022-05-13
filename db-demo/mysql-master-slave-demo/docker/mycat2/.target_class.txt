@@ -1,0 +1,15 @@
+io.mycat.prototypeserver
+# +io.mycat.prototypeserver.mysql.PrototypeService
+# +io.mycat.prototypeserver.mysql.VisualTableHandler
+
+# +io.mycat.router.ShardingTableHandler
+# +io.mycat.Partition
+# +io.mycat.replica.ReplicaSelectorRuntime
+# +io.mycat.replica.ReplicaSelectorManager
+# +io.mycat.replica.ReplicaDataSourceSelector
+# +io.mycat.monitor.MonitorReplicaSelectorManager
+# +io.mycat.datasource.jdbc.datasource.JdbcDataSource
+# +io.mycat.datasource.jdbc.datasource.JdbcConnectionManager
+# +io.mycat.MetadataManager
+# +io.mycat.BackendTableInfo
+# +io.mycat.SchemaInfo

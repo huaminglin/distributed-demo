@@ -1,0 +1,107 @@
+metadata:
+  schemas: [ {
+    schemaName: 'db1' ,
+    targetName: 'repli',
+    shadingTables: {
+      travelrecord: {
+        columns: [ {
+          columnName: id ,
+          shardingType: NATURE_DATABASE_TABLE ,
+          function: {
+            clazz: io.mycat.router.function.PartitionByLong ,
+            name: partitionByLong,
+            properties: { partitionCount: '4', partitionLength: '256' }, ranges: { }
+          }
+        } ],
+        createTableSQL: 'CREATE TABLE `travelrecord` ( `id` bigint(20) NOT NULL AUTO_INCREMENT,`user_id` varchar(100) CHARACTER SET utf8 DEFAULT NULL,`traveldate` date DEFAULT NULL,`fee` decimal(10,0) DEFAULT NULL,`days` int(11) DEFAULT NULL,`blob` longblob DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;',
+        dataNodes: [ { targetName: defaultDs ,schemaName: db1, tableName: travelrecord },
+                     { targetName: defaultDs ,schemaName: db1, tableName: travelrecord2 },
+                     { targetName: defaultDs ,schemaName: db1, tableName: travelrecord3 },
+                     { targetName: defaultDs2 ,schemaName: db2, tableName: travelrecord } ] #9999999999
+      },
+    },
+    globalTables: {
+      company: {
+        createTableSQL: 'CREATE TABLE `company` ( `id` int(11) NOT NULL AUTO_INCREMENT,`companyname` varchar(20) DEFAULT NULL,`addressid` int(11) DEFAULT NULL,PRIMARY KEY (`id`))',
+        dataNodes: [ { targetName: defaultDs2 ,schemaName: db1, tableName: company },{ targetName: defaultDs2 ,schemaName: db2, tableName: company } ]
+      }
+    }
+  } ]
+interceptors:
+  [ {
+    user: { ip: '.', password: '123456', username: root },
+    sqls: [
+      #     {sql: 'SELECT COUNT(1) FROM db1.travelrecord',command: distributedQuery, cache: 'initialDelay = 1s,refreshInterval = 15s'}
+    ]
+  } ]
+datasource:
+  datasources: [ { name: defaultDs, ip: 0.0.0.0,port: 3306,user: root,password: 123456,maxCon: 10000,minCon: 10,
+                   maxRetryCount: 3,
+                   maxConnectTimeout: 10000,
+                   dbType: mysql,
+                   url: 'jdbc:mysql://127.0.0.1:3306?useUnicode=true&serverTimezone=UTC',
+                   weight: 1,
+                   initSqls: [ ],
+                   instanceType:,
+                   initSqlsGetConnection: true
+  },
+    {   name: defaultDs2, ip: 0.0.0.0,port: 3307,user: root,password: 123456,maxCon: 10000,minCon: 10,maxRetryCount: 3,maxConnectTimeout: 10000,dbType: mysql,
+        url: 'jdbc:mysql://127.0.0.1:3307?useUnicode=true&serverTimezone=UTC',weight: 1,initSqls: [ ]
+      , instanceType:,
+        initSqlsGetConnection: true
+    }
+  ]
+  datasourceProviderClass: io.mycat.datasource.jdbc.datasourceprovider.DruidDatasourceProvider
+  timer: { initialDelay: 10, period: 15, timeUnit: SECONDS }
+cluster:
+  close: true
+  clusters: [
+    { name: repli ,
+      replicaType: MASTER_SLAVE ,
+      switchType: SWITCH ,
+      readBalanceType: BALANCE_ALL  ,
+      readBalanceName:  ,
+      writeBalanceName:  ,
+      masters: [ defaultDs , defaultDs2 ],
+      replicas: [ defaultDs2 ],
+      maxCon:,
+      heartbeat: { maxRetry: 3,
+                   minSwitchTimeInterval: 120000 ,
+                   heartbeatTimeout: 100000 ,
+                   slaveThreshold: 0 ,
+                   requestType: 'mysql'
+      } }
+  ]
+  timer: { initialDelay: 0, period: 10, timeUnit: SECONDS }
+server:
+  ip: 0.0.0.0
+  port: 8066
+  reactorNumber: 1
+plug:
+  loadBalance:
+    defaultLoadBalance: balanceRandom
+    loadBalances: [
+      { name: BalanceRunOnMaster, clazz: io.mycat.plug.loadBalance.BalanceRunOnMaster },
+      { name: BalanceLeastActive, clazz: io.mycat.plug.loadBalance.BalanceLeastActive },
+      { name: BalanceRoundRobin, clazz: io.mycat.plug.loadBalance.BalanceRoundRobin },
+      { name: BalanceRunOnReplica, clazz: io.mycat.plug.loadBalance.BalanceRunOnReplica },
+      { name: BalanceRunOnRandomMaster, clazz: io.mycat.plug.loadBalance.BalanceRunOnRandomMaster }
+    ]
+  sequence:
+    sequences: [
+      { name: 'db1_travelrecord', clazz: io.mycat.plug.sequence.SequenceMySQLGenerator ,args: "sql : SELECT db1.mycat_seq_nextval('GLOBAL') , targetName:defaultDs" },
+      { name: 'db1_address', clazz: io.mycat.plug.sequence.SequenceSnowflakeGenerator ,args: 'workerId:1' },
+    ]
+  extra: [
+      "io.mycat.exporter.PrometheusExporter"
+  ]
+manager:
+  ip: 0.0.0.0
+  port: 9066
+  users: [ { ip: '.', password: '123456', username: root } ]
+
+properties:
+  key: value
+
+#lib start
+#lib end

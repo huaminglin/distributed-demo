@@ -1,0 +1,32 @@
+{
+  "schemaName": "db1",
+  "customTables": {},
+  "globalTables": {},
+  "normalTables": {
+    "wc_batchs": {
+      "locality": {
+        "schemaName": "db1",
+        "tableName": "wc_batchs",
+        "targetName": "prototype"
+      }
+    }
+  },
+  "shadingTables": {
+    "wc_advert_resources": {
+      "createTableSQL": "CREATE TABLE wc_advert_resources (id bigint NOT NULL AUTO_INCREMENT COMMENT '逻辑ID',sourceUrl varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' ......) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC COMMENT='广告资源';",
+      "function": {
+        "clazz": "io.mycat.router.mycat1xfunction.PartitionByMod",
+        "properties": {
+          "columnName": "id",
+          "count": "50"
+        },
+        "ranges": {}
+      },
+      "partition": {
+        "targetNames": "prototype",
+        "schemaNames": "db1",
+        "tableNames": "wc_advert_resources_$0-49"
+      }
+    }
+  }
+}
